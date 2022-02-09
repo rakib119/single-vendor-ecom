@@ -14,11 +14,6 @@
                     <h2>Add Features</h2>
                 </div>
                 <div class="card-body">
-                    @if (session('success'))
-                        <div class="alert alert-success">
-                            <h6>{{ session('success') }}</h6>
-                        </div>
-                    @endif
                     <form action="{{ route('feature.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">

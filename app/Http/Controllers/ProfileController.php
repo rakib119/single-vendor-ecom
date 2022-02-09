@@ -52,7 +52,7 @@ class ProfileController extends Controller
         User::find(auth()->id())->update(
             ['password' => bcrypt($request->password)]
         );
-        return  back()->with('password_success', 'password changed successfully');
+        return  back()->with('success', 'password changed successfully');
     }
     public function changeProfilePicture(Request $request)
     {
@@ -71,7 +71,7 @@ class ProfileController extends Controller
             User::find(auth()->id())->update([
                 "profile_photo" => $photo_name
             ]);
-            return back()->with("pro_pic_success", "Profile photo successfully updated");
+            return back()->with("success", "Profile photo successfully updated");
         }
     }
     public function changeCoverPhoto(Request $request)
@@ -92,7 +92,7 @@ class ProfileController extends Controller
             User::find(auth()->id())->update([
                 'cover_photo' => $cover_photo_name
             ]);
-            return back()->with("cover_photo_success", "Profile photo successfully updated");
+            return back()->with("success", "Profile photo successfully updated");
         }
     }
 }

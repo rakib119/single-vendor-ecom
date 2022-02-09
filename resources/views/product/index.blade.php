@@ -5,7 +5,6 @@
             <div class="page-titles">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('product.index') }}">Product</a></li>
                     <li class="breadcrumb-item active"><a href="javascript:void(0)">Product List</a></li>
                 </ol>
             </div>
@@ -30,17 +29,13 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success">
-                                <h6>{{ Str::ucfirst(session('success')) }}</h6>
-                            </div>
-                        @endif
                         <div class="table-responsive">
                             <table class="table table-responsive-md">
                                 <thead>
                                     <tr>
                                         <th class="width50"> #No</th>
                                         <th>Product Name</th>
+                                        <th>Category</th>
                                         <th>Product Price</th>
                                         <th>Product Photo</th>
                                         <th class="text-center">Action</th>
@@ -48,18 +43,68 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($products as $product)
+                                        @php
+                                            $totalSubCat = DB::table('feature_photos')
+                                                ->where('product_id', $product->id)
+                                                ->count();
+                                        @endphp
                                         <tr>
                                             <td><strong>{{ $loop->index + 1 }}</strong></td>
                                             <td>{{ $product->product_name }}</td>
+                                            <td>{{ $product->category_name }}</td>
                                             <td>{{ $product->discounted_price }}</td>
                                             <td><img src="{{ asset('uploads\products') . '/' . $product->product_photo }}"
-                                                    width="70" height="50" alt="product photo"></td>
-                                            <td>
-                                                <div class="d-flex justify-content-center">
+                                                    width="50" alt="product photo"></td>
+                                            <td class="text-center">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-primary dropdown-toggle" type="button"
+                                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">
+                                                        Action
+                                                    </button>
+                                                    <div class="dropdown-menu bg-primary"
+                                                        aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item text-white "
+                                                            href="{{ route('product.show', $product->id) }}"><i
+                                                                class="fa fa-info mr-1"></i> View
+                                                        </a>
+                                                        <a class="dropdown-item text-white "
+                                                            href="{{ route('product.edit', $product->id) }}"><i
+                                                                class="fa fa-pencil  mr-1"></i>Edit
+                                                        </a>
+                                                        <form action="{{ route('product.destroy', $product->id) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('delete')
+                                                            <button type="submit" class="dropdown-item text-white "><i
+                                                                    class="fa fa-trash  mr-1"></i>Delete</button>
+                                                        </form>
+                                                        <a class="dropdown-item text-white "
+                                                            href="{{ route('inventory.index', $product->id) }}"><i
+                                                                class="fa fa-plus mr-1"></i>Add Inventory
+                                                        </a>
+                                                        <a class="dropdown-item text-white "
+                                                            href="{{ route('feature_photo.create', 'pid=' . $product->slug) }}"><i
+                                                                class="fa fa-plus mr-1"></i> Feature Photo
+                                                        </a>
+                                                        @if ($totalSubCat)
+                                                            <a class="dropdown-item text-white "
+                                                                href="{{ route('feature_list', $product->id) }}"><i
+                                                                    class="fa fa-eye mr-1"></i> Feature Photo List
+                                                            </a>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                {{-- <div class="d-flex justify-content-center">
                                                     <a href="{{ route('product.show', $product->id) }}"
                                                         class="btn btn-primary text-white mr-1"><i
                                                             class="fa fa-info mr-1"></i> View
                                                     </a>
+                                                    <a href="{{ route('product.show', $product->id) }}"
+                                                        class="btn btn-primary text-white mr-1"><i
+                                                            class="fa fa-info mr-1"></i> Feature Photo
+                                                    </a>
+
                                                     <a href="{{ route('product.edit', $product->id) }}"
                                                         class="btn btn-warning text-white mr-1"><i
                                                             class="fa fa-pencil  mr-1"></i>Edit
@@ -71,7 +116,11 @@
                                                         <button type="submit" class="btn btn-danger"><i
                                                                 class="fa fa-trash  mr-1"></i>Delete</button>
                                                     </form>
-                                                </div>
+                                                    <a href="{{ route('product.edit', $product->slug) }}"
+                                                        class="btn btn-warning text-white mr-1"><i
+                                                            class="fa fa-pencil  mr-1"></i>Edit
+                                                    </a>
+                                                </div> --}}
                                             </td>
                                         </tr>
                                     @endforeach

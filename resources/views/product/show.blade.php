@@ -18,47 +18,37 @@
                                     <!-- Tab panes -->
                                     <div class="tab-content">
                                         <div role="tabpanel" class="tab-pane fade show active" id="first">
-                                            <img class="img-fluid"
+                                            <img width="570" height="560" class="img-fluid"
                                                 src="{{ asset("uploads/products/$product->product_photo") }}" alt="">
                                         </div>
-                                        <div role="tabpanel" class="tab-pane fade" id="second">
-                                            <img class="img-fluid"
-                                                src="{{ asset('dashboard') }}/images/product/2.jpg" alt="">
-                                        </div>
-                                        <div role="tabpanel" class="tab-pane fade" id="third">
-                                            <img class="img-fluid"
-                                                src="{{ asset('dashboard') }}/images/product/3.jpg" alt="">
-                                        </div>
-                                        <div role="tabpanel" class="tab-pane fade" id="for">
-                                            <img class="img-fluid"
-                                                src="{{ asset('dashboard') }}/images/product/4.jpg" alt="">
-                                        </div>
+                                        @foreach ($feature_photos as $feature_photo)
+                                            <div role="tabpanel" class="tab-pane fade"
+                                                id="{{ 'photo' . $feature_photo->id }}">
+                                                <img width="570" height="560" class="img-fluid"
+                                                    src="{{ asset("uploads/product_feature_photo/$feature_photo->photo_name") }}"
+                                                    alt="">
+                                            </div>
+                                        @endforeach
+
                                     </div>
                                     <div class="tab-slide-content new-arrival-product mb-4 mb-xl-0">
                                         <!-- Nav tabs -->
                                         <ul class="nav slide-item-list mt-3" role="tablist">
                                             <li role="presentation" class="show">
                                                 <a href="#first" role="tab" data-toggle="tab">
-                                                    <img class="img-fluid"
+                                                    <img width="270" height="270" class="img-fluid"
                                                         src="{{ asset("uploads/products/$product->product_photo") }}"
-                                                        alt="" width="50">
+                                                        alt="">
                                                 </a>
                                             </li>
-                                            <li role="presentation">
-                                                <a href="#second" role="tab" data-toggle="tab"><img class="img-fluid"
-                                                        src="{{ asset('dashboard') }}/images/tab/2.jpg" alt=""
-                                                        width="50"></a>
-                                            </li>
-                                            <li role="presentation">
-                                                <a href="#third" role="tab" data-toggle="tab"><img class="img-fluid"
-                                                        src="{{ asset('dashboard') }}/images/tab/3.jpg" alt=""
-                                                        width="50"></a>
-                                            </li>
-                                            <li role="presentation">
-                                                <a href="#for" role="tab" data-toggle="tab"><img class="img-fluid"
-                                                        src="{{ asset('dashboard') }}/images/tab/4.jpg" alt=""
-                                                        width="50"></a>
-                                            </li>
+                                            @foreach ($feature_photos as $feature_photo)
+                                                <li role="presentation">
+                                                    <a href="#{{ 'photo' . $feature_photo->id }}" role="tab"
+                                                        data-toggle="tab"><img class="img-fluid"
+                                                            src="{{ asset("uploads/product_feature_photo/$feature_photo->photo_name") }}"
+                                                            alt="" width="50"></a>
+                                                </li>
+                                            @endforeach
                                         </ul>
                                     </div>
                                 </div>
@@ -102,7 +92,7 @@
                                                 <span class="badge badge-success light">shoes</span>
                                                 <span class="badge badge-success light">dresses</span>
                                             </p>
-                                            <p class="text-content"> {{ $product->short_description }} </p>
+                                            <p class="text-content"> {!! $product->short_description !!} </p>
                                             <div class="filtaring-area my-3">
                                                 <div class="size-filter">
                                                     <h4 class="m-b-15">Select size</h4>

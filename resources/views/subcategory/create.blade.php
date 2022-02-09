@@ -7,11 +7,6 @@
                     <h2>Add Subcategory</h2>
                 </div>
                 <div class="card-body">
-                    @if (session('success'))
-                        <div class="alert alert-success">
-                            <h6>{{ session('success') }}</h6>
-                        </div>
-                    @endif
                     <div class="row">
                         <div class="col-md-12">
                             <form action="{{ route('subcategory.store') }}" method="POST">
@@ -31,7 +26,7 @@
                                 </div>
                                 <div class="form-group col-6">
                                     <label>Subcategory Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="subcategory_name"
+                                    <input type="text" name="subcategory_name" value="{{ old('subcategory_name') }}"
                                         class="form-control border border-dark  @error('subcategory_name')is-invalid @enderror">
                                     @error('subcategory_name')
                                         <small class="text-danger">{{ $message }}</small>

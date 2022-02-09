@@ -5,21 +5,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="robots" content="index, follow" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Jesco - Fashoin eCommerce HTML Template</title>
     <meta name="description" content="Jesco - Fashoin eCommerce HTML Template" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
     <!-- Add site Favicon -->
     <link rel="shortcut icon" href="{{ asset('fontend') }}/images/favicon/favicon.ico" type="image/png">
-
-
     <!-- vendor css (Icon Font) -->
     <link rel="stylesheet" href="{{ asset('fontend') }}/css/vendor/bootstrap.bundle.min.css" />
     <link rel="stylesheet" href="{{ asset('fontend') }}/css/vendor/pe-icon-7-stroke.css" />
     <link rel="stylesheet" href="{{ asset('fontend') }}/css/vendor/font.awesome.css" />
-
     <!-- plugins css (All Plugins Files) -->
-
     <link rel="stylesheet" href="{{ asset('fontend') }}/css/plugins/animate.css" />
     <link rel="stylesheet" href="{{ asset('fontend') }}/css/plugins/swiper-bundle.min.css" />
     <link rel="stylesheet" href="{{ asset('fontend') }}/css/plugins/jquery-ui.min.css" />
@@ -32,7 +29,7 @@
 
     <!-- Main Style -->
     <link rel="stylesheet" href="{{ asset('fontend') }}/css/style.css" />
-
+    @yield('css')
 </head>
 
 <body>
@@ -743,6 +740,8 @@
 
     <!-- Main Js -->
     <script src="{{ asset('fontend') }}/js/main.js"></script>
+    @yield('javascript')
+
 </body>
 
 </html>

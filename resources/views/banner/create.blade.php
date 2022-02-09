@@ -14,11 +14,6 @@
                     <h2>Add Banner</h2>
                 </div>
                 <div class="card-body">
-                    @if (session('success'))
-                        <div class="alert alert-success">
-                            <h6>{{ session('success') }}</h6>
-                        </div>
-                    @endif
                     <form action="{{ route('banner.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">

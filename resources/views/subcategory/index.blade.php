@@ -17,11 +17,6 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success">
-                                <h6>{{ Str::ucfirst(session('success')) }}</h6>
-                            </div>
-                        @endif
                         <div class="table-responsive">
                             <table class="table table-responsive-md">
                                 <thead>
@@ -37,10 +32,12 @@
                                     @foreach ($subcategories as $subcategory)
                                         <tr>
                                             <td><strong>{{ $loop->index + 1 }}</strong></td>
-                                            <td>{{ ucwords(App\Models\category::withTrashed()->find($subcategory->category_id)->category_name) }}
+                                            {{-- <td>{{ $subcategory->category_id }}
+                                            </td> --}}
+                                            <td class="text-capitalize">{{ App\Models\Category::find($subcategory->category_id)->category_name }}
                                             </td>
                                             <td>{{ $subcategory->subcategory_name }}</td>
-                                            <td>{{ ucwords(App\Models\user::find($subcategory->created_by)->name) }}</td>
+                                            <td class="text-capitalize">{{ App\Models\user::find($subcategory->created_by)->name }}</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <span class="badge light badge-success">Active</span>

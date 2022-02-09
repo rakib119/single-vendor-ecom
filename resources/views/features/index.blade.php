@@ -31,11 +31,6 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success">
-                                <h6>{{ Str::ucfirst(session('success')) }}</h6>
-                            </div>
-                        @endif
                         <div class="table-responsive">
                             <table class="table table-responsive-md">
                                 <thead>

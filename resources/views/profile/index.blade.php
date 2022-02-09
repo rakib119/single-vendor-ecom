@@ -15,9 +15,9 @@
                         <div class="profile-head">
                             <div class="photo-content">
                                 <div class="cover-phot" style="background: url({{ asset('dashboard/uploads/cover_photo') . '/' . Auth::user()->cover_photo }});background-size: cover;
-                                            background-position: center;
-                                            min-height: 250px;
-                                            width: 100%;"></div>
+                                                background-position: center;
+                                                min-height: 250px;
+                                                width: 100%;"></div>
                             </div>
                             <div class="profile-info">
                                 <div class="profile-photo">
@@ -71,11 +71,6 @@
                                     <div class="pt-3">
                                         <div class="settings-form">
                                             <h4 class="text-primary mb-5">Profile Photo</h4>
-                                            @if (session('pro_pic_success'))
-                                                <div class="alert alert-success">
-                                                    <h6>{{ session('pro_pic_success') }}</h6>
-                                                </div>
-                                            @endif
                                             <form method="POST" enctype="multipart/form-data"
                                                 action="{{ route('profile.change_profile_picture') }}">
                                                 @csrf
@@ -100,11 +95,6 @@
                                     <div class="pt-3">
                                         <div class="settings-form">
                                             <h4 class="text-primary mb-5">Cover Photo</h4>
-                                            @if (session('cover_photo_success'))
-                                                <div class="alert alert-success">
-                                                    <h6>{{ session('cover_photo_success') }}</h6>
-                                                </div>
-                                            @endif
                                             <form method="POST" enctype="multipart/form-data"
                                                 action="{{ route('profile.change_cover_photo') }}">
                                                 @csrf
@@ -135,11 +125,6 @@
                             <div class="pt-3">
                                 <div class="settings-form">
                                     <h4 class="text-primary mb-5">Update Profile</h4>
-                                    @if (session('success'))
-                                        <div class="alert alert-success">
-                                            <h6>{{ session('success') }}</h6>
-                                        </div>
-                                    @endif
                                     <form method="POST" action="{{ route('profile.update') }}">
                                         @csrf
                                         <div class="form-row">
@@ -180,11 +165,6 @@
                             <div class="pt-3">
                                 <div class="settings-form">
                                     <h4 class="text-primary  mb-5">Change Password</h4>
-                                    @if (session('password_success'))
-                                        <div class="alert alert-success">
-                                            <h6>{{ session('password_success') }}</h6>
-                                        </div>
-                                    @endif
                                     <form method="POST" action="{{ route('profile.changePassword') }}">
                                         @csrf
                                         <div class="form-row">
@@ -241,4 +221,3 @@
         })
     </script>
 @endsection
-

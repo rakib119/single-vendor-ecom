@@ -10,10 +10,15 @@ use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardCotroller;
+use App\Http\Controllers\FeaturePhotoController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\VariationController;
 
 // dashboard home
 Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/admin', [DashboardCotroller::class, 'index'])->name('admin');
 // profile
 Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
 Route::post('profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
@@ -35,10 +40,24 @@ Route::resource('feature', FeatureController::class);
 Route::post('feature/delete/{id}', [FeatureController::class, 'delete'])->name('feature.delete');
 Route::get('feature/restore/{id}', [FeatureController::class, 'restore'])->name('feature.restore');
 // Product
+// Route::resource('product', ProductController::class)->parameters(['product' => 'slug']);
 Route::resource('product', ProductController::class);
 Route::post('product/get_subcat', [ProductController::class, 'getSubCat'])->name('product.get_subcat');
 Route::post('product/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
 Route::get('product/restore/{id}', [ProductController::class, 'restore'])->name('product.restore');
+// feature photo
+Route::resource('feature_photo', FeaturePhotoController::class);
+Route::get('feature/list/{slug}', [FeaturePhotoController::class, 'featureList'])->name('feature_list');
+// Variation Manager
+Route::get('variation', [VariationController::class, 'index'])->name('variation.index');
+Route::post('variation/submit/color', [VariationController::class, 'createColor'])->name('variation.color_post');
+Route::post('variation/submit/size', [VariationController::class, 'createSize'])->name('variation.size_post');
+// Inventory
+Route::get('add-inventory/{product_id}', [InventoryController::class, 'addInventory'])->name('inventory.index');
+Route::post('inventory/store/{product_id}', [InventoryController::class, 'store'])->name('inventory.store');
 // Font End
 Route::get('/', [FontendController::class, 'index'])->name('index');
-Route::get('/{product_slug}', [FontendController::class, 'productDetails'])->name('product_details');
+Route::post('get/sizes', [FontendController::class, 'getSizes'])->name('get_sizes');
+Route::post('get/available/qty', [FontendController::class, 'getAvailableQty'])->name('get_available_qty');
+Route::get('product/details/{product_slug}', [FontendController::class, 'productDetails'])->name('product.product_details');
+

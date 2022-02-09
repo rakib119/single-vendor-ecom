@@ -1,4 +1,31 @@
 @extends('dashboard.dashboard')
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $('#categoryId').change(() => {
+                var category_id = $('#categoryId').val();
+                $.ajax({
+                    type: "post",
+                    url: '{{ route('product.get_subcat') }}',
+                    data: {
+                        category_id: category_id
+                    },
+                    success: function(results) {
+                        // alert(results);
+                        $('#subcategories').html(results);
+                    }
+                });
+            });
+            $('#summernote').summernote();
+            $('#summernote2').summernote();
+        });
+    </script>
+@endsection
 @section('content')
     <div class="content-body">
         <div class="container-fluid">
@@ -14,11 +41,6 @@
                     <h2>Edit Product</h2>
                 </div>
                 <div class="card-body">
-                    @if (session('success'))
-                        <div class="alert alert-success">
-                            <h6>{{ session('success') }}</h6>
-                        </div>
-                    @endif
                     <form action="{{ route('product.update', $product->id) }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
@@ -43,7 +65,7 @@
                             </div>
                             <div class="form-group col-6">
                                 <label>Category<span class="text-danger">*</span></label>
-                                <select name="category_id" id="categoryId"
+                                <select name="category_id" autocomplete="OFF" id="categoryId"
                                     class="form-control border border-dark  @error('category_id')is-invalid @enderror">
                                     <option value="">--Select Category--</option>
                                     @foreach ($categories as $category)
@@ -57,12 +79,12 @@
                             </div>
                             <div class="form-group col-6">
                                 <label>Subcategory<span class="text-danger">*</span></label>
-                                <select name="subcategory_id"
+                                <select id="subcategories" autocomplete="OFF" name="subcategory_id"
                                     class="form-control border border-dark  @error('subcategory_id')is-invalid @enderror">
-                                    <option value="">--Select Subategory--</option>
-                                    @foreach ($categories as $category)
-                                        <option {{ $category->id == $product->subcategory_id ? 'selected' : '' }}
-                                            value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                    @foreach ($subcategories as $subcategory)
+                                        <option {{ $subcategory->id == $product->subcategory_id ? 'selected' : '' }}
+                                            value="{{ $subcategory->id }}">{{ $subcategory->subcategory_name }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 @error('subcategory_id')
@@ -117,18 +139,18 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-12">
                                 <label>Short Description <span class="text-danger">*</span></label>
-                                <textarea name="short_description"
+                                <textarea id="summernote" name="short_description"
                                     class="form-control border border-dark  @error('short_description')is-invalid @enderror"
                                     rows="4">{{ $product->short_description }}</textarea>
                                 @error('short_description')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-12">
                                 <label>Long Description <span class="text-danger">*</span></label>
-                                <textarea name="description"
+                                <textarea id="summernote2" name="description"
                                     class="form-control border border-dark  @error('description')is-invalid @enderror"
                                     rows="4">{{ $product->description }}</textarea>
                                 @error('description')

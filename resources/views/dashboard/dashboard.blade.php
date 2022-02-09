@@ -13,6 +13,7 @@
     <link href="{{ asset('dashboard') }}/vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
     <link href="{{ asset('dashboard') }}/vendor/owl-carousel/owl.carousel.css" rel="stylesheet">
     <link href="{{ asset('dashboard') }}/css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&display=swap"
         rel="stylesheet">
@@ -896,7 +897,7 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a href="{{ route('profile') }}" class="dropdown-item ai-icon">
-                                        <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" class="text-primary"
+                                        <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" class="text-white"
                                             width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -906,7 +907,7 @@
                                     </a>
                                     <a href="{{ asset('dashboard') }}/email-inbox.html"
                                         class="dropdown-item ai-icon">
-                                        <svg id="icon-inbox" xmlns="http://www.w3.org/2000/svg" class="text-success"
+                                        <svg id="icon-inbox" xmlns="http://www.w3.org/2000/svg" class="text-white"
                                             width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path
@@ -919,7 +920,7 @@
                                     <a href="{{ route('logout') }}"
                                         onclick="event.preventDefault();document.getElementById('logout-form').submit();"
                                         class="dropdown-item ai-icon">
-                                        <svg id="icon-logout" class="text-danger" width="18" height="18"
+                                        <svg id="icon-logout" class="text-white" width="18" height="18"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                             stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -988,13 +989,20 @@
                         </ul>
                     </li>
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-picture-o"></i>
+                            <i class="fa fa-cube"></i>
+
                             <span class="nav-text">Product</span>
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ route('product.create') }}">Add Product</a></li>
                             <li><a href="{{ route('product.index') }}">Manage Product</a></li>
                         </ul>
+                    </li>
+                    <li>
+                        <a class="ai-icon" href="{{ route('variation.index') }}" aria-expanded="false">
+                            <i class="fa fa-th"></i>
+                            <span class="nav-text">Variation Manager</span>
+                        </a>
                     </li>
                 </ul>
                 <div class="copyright">
@@ -1008,7 +1016,6 @@
                 <p>&copy;Copyright {{ Date('Y') }} All Rights Reserved</p>
             </div>
         </div>
-
     </div>
     <!-- Required vendors -->
     <script src="{{ asset('dashboard') }}/vendor/global/global.min.js"></script>
@@ -1017,13 +1024,12 @@
     <script src="{{ asset('dashboard') }}/js/custom.min.js"></script>
     <script src="{{ asset('dashboard') }}/js/deznav-init.js"></script>
     <script src="{{ asset('dashboard') }}/vendor/owl-carousel/owl.carousel.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Chart piety plugin files -->
     <script src="{{ asset('dashboard') }}/vendor/peity/jquery.peity.min.js"></script>
-
     <!-- Apex Chart -->
     <script src="{{ asset('dashboard') }}/vendor/apexchart/apexchart.js"></script>
-
     <!-- Dashboard 1 -->
     <script src="{{ asset('dashboard') }}/js/dashboard/dashboard-1.js"></script>
     <script>
@@ -1067,6 +1073,44 @@
                 carouselReview();
             }, 1000);
         });
+    </script>
+    <!-- Sweetalert -->
+    @if (session('success'))
+        <script>
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            Toast.fire({
+                icon: 'success',
+                title: '{{ session('success') }}'
+            })
+        </script>
+    @endif
+    <script>
+        function deleteItem() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You you want to delete this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#deleteItem').submit()
+                }
+            })
+        }
     </script>
     <!-- Javascript -->
     @yield('script')

@@ -1,4 +1,5 @@
 @extends('layouts.fontend')
+
 @section('content')
 
     <div class="product-details-area pt-100px pb-100px">
@@ -7,51 +8,63 @@
                 <div class="col-lg-6 col-sm-12 col-xs-12 mb-lm-30px mb-md-30px mb-sm-30px">
                     <div class="swiper-container zoom-top">
                         <div class="swiper-wrapper">
+                            @php
+                                $product_id = $product->id;
+                            @endphp
                             <div class="swiper-slide zoom-image-hover">
-                                <img class="img-responsive m-auto" src="{{ asset('fontend') }}/images/product-image/zoom-image/1.jpg"
-                                    alt="">
+                                <img class="img-responsive m-auto"
+                                    src="{{ asset('uploads/products') }}/{{ $product->product_photo }}"
+                                    alt="Photo not found">
                             </div>
                             <div class="swiper-slide zoom-image-hover">
-                                <img class="img-responsive m-auto" src="{{ asset('fontend') }}/images/product-image/zoom-image/2.jpg"
-                                    alt="">
+                                <img class="img-responsive m-auto"
+                                    src="{{ asset('fontend') }}/images/product-image/zoom-image/2.jpg" alt="">
                             </div>
                             <div class="swiper-slide zoom-image-hover">
-                                <img class="img-responsive m-auto" src="{{ asset('fontend') }}/images/product-image/zoom-image/3.jpg"
-                                    alt="">
+                                <img class="img-responsive m-auto"
+                                    src="{{ asset('fontend') }}/images/product-image/zoom-image/3.jpg" alt="">
                             </div>
                             <div class="swiper-slide zoom-image-hover">
-                                <img class="img-responsive m-auto" src="{{ asset('fontend') }}/images/product-image/zoom-image/4.jpg"
-                                    alt="">
+                                <img class="img-responsive m-auto"
+                                    src="{{ asset('fontend') }}/images/product-image/zoom-image/4.jpg" alt="">
                             </div>
                         </div>
                     </div>
                     <div class="swiper-container zoom-thumbs mt-3 mb-3">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <img class="img-responsive m-auto" src="{{ asset('fontend') }}/images/product-image/small-image/1.jpg"
-                                    alt="">
+                                <img class="img-responsive m-auto"
+                                    src="{{ asset('fontend') }}/images/product-image/small-image/1.jpg" alt="">
                             </div>
                             <div class="swiper-slide">
-                                <img class="img-responsive m-auto" src="{{ asset('fontend') }}/images/product-image/small-image/2.jpg"
-                                    alt="">
+                                <img class="img-responsive m-auto"
+                                    src="{{ asset('fontend') }}/images/product-image/small-image/2.jpg" alt="">
                             </div>
                             <div class="swiper-slide">
-                                <img class="img-responsive m-auto" src="{{ asset('fontend') }}/images/product-image/small-image/3.jpg"
-                                    alt="">
+                                <img class="img-responsive m-auto"
+                                    src="{{ asset('fontend') }}/images/product-image/small-image/3.jpg" alt="">
                             </div>
                             <div class="swiper-slide">
-                                <img class="img-responsive m-auto" src="{{ asset('fontend') }}/images/product-image/small-image/4.jpg"
-                                    alt="">
+                                <img class="img-responsive m-auto"
+                                    src="{{ asset('fontend') }}/images/product-image/small-image/4.jpg" alt="">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-sm-12 col-xs-12" data-aos="fade-up" data-aos-delay="200">
                     <div class="product-details-content quickview-content">
-                        <h2>Ardene Microfiber Tights</h2>
+                        <h2>{{ $product->product_name }}</h2>
                         <div class="pricing-meta">
                             <ul>
-                                <li class="old-price not-cut">$18.90</li>
+                                <li class="old-price not-cut">৳ {{ $product->discounted_price }}</li>
+
+                                <li> <s style="font-size: 15px">৳ {{ $product->regular_price }} </s>&nbsp;&nbsp;&nbsp;
+                                    @php
+                                        $save = 100 - ($product->discounted_price * 100) / $product->regular_price;
+                                    @endphp
+                                    <span
+                                        class="sale">{{ $save > 0 ? '-' . round($save, 2) . ' %' : '' }}</span>
+                                </li>
                             </ul>
                         </div>
                         <div class="pro-details-rating-wrap">
@@ -64,32 +77,39 @@
                             </div>
                             <span class="read-review"><a class="reviews" href="#">( 5 Customer Review )</a></span>
                         </div>
-                        <div class="pro-details-color-info d-flex align-items-center">
-                            <span>Color</span>
-                            <div class="pro-details-color">
-                                <ul>
-                                    <li><a class="active-color yellow" href="#"></a></li>
-                                    <li><a class="black" href="#"></a></li>
-                                    <li><a class="red" href="#"></a></li>
-                                    <li><a class="pink" href="#"></a></li>
-                                </ul>
+                        <input type="hidden" id="input_color">
+                        <input type="hidden" id="input_size">
+                        @if ($inventories->count() > 0)
+                            <div class="pro-details-color-info d-flex align-items-center">
+                                <span>Color </span>
+                                <div class="pro-details-color">
+                                    <ul>
+                                        @foreach ($inventories as $inventory)
+                                            <li id="{{ $inventory->color_id }}" class="color_palate"
+                                                style="cursor:pointer" title="{{ $inventory->getColor->color_name }}">
+                                                <a
+                                                    style="border::1px solid black; background: {{ $inventory->getColor->color_code }}"></a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
+                        @endif
+
+
                         <div class="pro-details-size-info d-flex align-items-center">
                             <span>Size</span>
-                            <div class="pro-details-size">
-                                <ul>
-                                    <li><a class="active-size gray" href="#">S</a></li>
-                                    <li><a class="gray" href="#">M</a></li>
-                                    <li><a class="gray" href="#">L</a></li>
-                                    <li><a class="gray" href="#">XL</a></li>
-                                </ul>
-                            </div>
+                            <select id="product_sizes" class="form-control">
+                                <option selected>Choose color first</option>
+                            </select>
                         </div>
-                        <p class="m-0">Lorem ipsum dolor sit amet, consect adipisicing elit, sed do eiusmod
-                            tempor incidi ut labore
-                            et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercita ullamco laboris nisi
-                            ut aliquip ex ea commodo </p>
+                        <p class="m-0">
+                            Availability:
+                            <span id="default_stock"
+                                class="badge {{ $total_inventories > 0 ? 'bg-success' : 'bg-danger' }}">{{ $total_inventories > 0 ? 'In stock' : 'Out of stock' }}</span>
+                            <span id="available_stock"> </span>
+                        </p>
+                        <p class="m-0">{!! $product->short_description !!}</p>
                         <div class="pro-details-quality">
                             <div class="cart-plus-minus">
                                 <input class="cart-plus-minus-box" type="text" name="qtybutton" value="1" />
@@ -106,10 +126,10 @@
                             </div>
                         </div>
                         <div class="pro-details-sku-info pro-details-same-style  d-flex">
-                            <span>SKU: </span>
+                            <span>Product Code: </span>
                             <ul class="d-flex">
                                 <li>
-                                    <a href="#">Ch-256xl</a>
+                                    {{ $product->product_code }}
                                 </li>
                             </ul>
                         </div>
@@ -117,10 +137,12 @@
                             <span>Categories: </span>
                             <ul class="d-flex">
                                 <li>
-                                    <a href="#">Fashion.</a>
+                                    <a
+                                        href="#">{{ App\Models\Category::find($product->category_id)->category_name }}.</a>
                                 </li>
                                 <li>
-                                    <a href="#">eCommerce</a>
+                                    <a
+                                        href="#">{{ App\Models\Subcategory::find($product->subcategory_id)->subcategory_name }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -162,30 +184,16 @@
                     <div id="des-details2" class="tab-pane">
                         <div class="product-anotherinfo-wrapper text-start">
                             <ul>
-                                <li><span>Weight</span> 400 g</li>
-                                <li><span>Dimensions</span>10 x 10 x 15 cm</li>
-                                <li><span>Materials</span> 60% cotton, 40% polyester</li>
-                                <li><span>Other Info</span> American heirloom jean shorts pug seitan letterpress</li>
+                                <li><span>Weight</span> {{ $product->weight }}</li>
+                                <li><span>Dimensions</span>{{ $product->dimensions }}</li>
+                                <li><span>Materials</span>{{ $product->materials }}</li>
+                                <li><span>Other Info</span> {{ $product->other_info }}</li>
                             </ul>
                         </div>
                     </div>
                     <div id="des-details1" class="tab-pane active">
-                        <div class="product-description-wrapper">
-                            <p>
-
-                                Lorem ipsum dolor sit amet, consectetur adipisi elit, incididunt ut labore et. Ut enim
-                                ad minim veniam, quis nostrud exercita ullamco laboris nisi ut aliquip ex ea commol
-                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-                                eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                                qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste
-                                natus error sit voluptatem accusantiulo doloremque laudantium, totam rem aperiam, eaque
-                                ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt
-                                explicabo. Nemo enim ipsam voluptat quia voluptas sit aspernatur aut odit aut fugit, sed
-                                quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro
-                                quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed
-                                quia non numquam eius modi tempora incidunt ut labore
-
-                            </p>
+                        <div class="">
+                            <p>{!! $product->description !!} </p>
                         </div>
                     </div>
                     <div id="des-details3" class="tab-pane">
@@ -298,269 +306,94 @@
             </div>
         </div>
     </div>
-
-    <div class="related-product-area pb-100px">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="section-title text-center mb-30px0px line-height-1">
-                        <h2 class="title m-0">Related Products</h2>
+    @if ($retated_product->count())
+        <div class="related-product-area pb-100px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="section-title text-center mb-30px0px line-height-1">
+                            <h2 class="title m-0">Related Products</h2>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="new-product-slider swiper-container slider-nav-style-1 small-nav">
-                <div class="new-product-wrapper swiper-wrapper">
-                    <div class="new-product-item swiper-slide">
-                        <div class="product">
-                            <div class="thumb">
-                                <a href="single-product.html" class="image">
-                                    <img src="{{ asset('fontend') }}/images/product-image/8.jpg" alt="Product" />
-                                    <img class="hover-image" src="{{ asset('fontend') }}/images/product-image/6.jpg" alt="Product" />
-                                </a>
-                                <span class="badges">
-                                    <span class="new">New</span>
-                                </span>
-                                <div class="actions">
-                                    <a href="wishlist.html" class="action wishlist" title="Wishlist"><i
-                                            class="pe-7s-like"></i></a>
-                                    <a href="#" class="action quickview" data-link-action="quickview" title="Quick view"
-                                        data-bs-toggle="modal" data-bs-target="#exampleModal"><i
-                                            class="pe-7s-search"></i></a>
-                                    <a href="compare.html" class="action compare" title="Compare"><i
-                                            class="pe-7s-refresh-2"></i></a>
-                                </div>
-                                <button title="Add To Cart" class=" add-to-cart">Add
-                                    To Cart</button>
+                <div class="new-product-slider swiper-container slider-nav-style-1 small-nav">
+                    <div class="new-product-wrapper swiper-wrapper">
+                        @foreach ($retated_product as $product)
+                            <div class="new-product-item swiper-slide">
+                                @include('part_of_website.product')
                             </div>
-                            <div class="content">
-                                <span class="ratings">
-                                    <span class="rating-wrap">
-                                        <span class="star" style="width: 100%"></span>
-                                    </span>
-                                    <span class="rating-num">( 5 Review )</span>
-                                </span>
-                                <h5 class="title"><a href="single-product.html">Women's Elizabeth
-                                        Coat
-                                    </a>
-                                </h5>
-                                <span class="price">
-                                    <span class="new">$38.50</span>
-                                </span>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
-                    <div class="new-product-item swiper-slide">
-                        <!-- Single Prodect -->
-                        <div class="product">
-                            <div class="thumb">
-                                <a href="single-product.html" class="image">
-                                    <img src="{{ asset('fontend') }}/images/product-image/9.jpg" alt="Product" />
-                                    <img class="hover-image" src="{{ asset('fontend') }}/images/product-image/5.jpg" alt="Product" />
-                                </a>
-                                <span class="badges">
-                                    <span class="sale">-10%</span>
-                                    <span class="new">New</span>
-                                </span>
-                                <div class="actions">
-                                    <a href="wishlist.html" class="action wishlist" title="Wishlist"><i
-                                            class="pe-7s-like"></i></a>
-                                    <a href="#" class="action quickview" data-link-action="quickview" title="Quick view"
-                                        data-bs-toggle="modal" data-bs-target="#exampleModal"><i
-                                            class="pe-7s-search"></i></a>
-                                    <a href="compare.html" class="action compare" title="Compare"><i
-                                            class="pe-7s-refresh-2"></i></a>
-                                </div>
-                                <button title="Add To Cart" class=" add-to-cart">Add
-                                    To Cart</button>
-                            </div>
-                            <div class="content">
-                                <span class="ratings">
-                                    <span class="rating-wrap">
-                                        <span class="star" style="width: 80%"></span>
-                                    </span>
-                                    <span class="rating-num">( 4 Review )</span>
-                                </span>
-                                <h5 class="title"><a href="single-product.html">Ardene Microfiber
-                                        Tights</a>
-                                </h5>
-                                <span class="price">
-                                    <span class="new">$38.50</span>
-                                    <span class="old">$48.50</span>
-                                </span>
-                            </div>
-                        </div>
-                        <!-- Single Prodect -->
+                    <!-- Add Arrows -->
+                    <div class="swiper-buttons">
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
                     </div>
-                    <div class="new-product-item swiper-slide">
-                        <!-- Single Prodect -->
-                        <div class="product">
-                            <div class="thumb">
-                                <a href="single-product.html" class="image">
-                                    <img src="{{ asset('fontend') }}/images/product-image/10.jpg" alt="Product" />
-                                    <img class="hover-image" src="{{ asset('fontend') }}/images/product-image/2.jpg" alt="Product" />
-                                </a>
-                                <span class="badges">
-                                    <span class="sale">-7%</span>
-                                </span>
-                                <div class="actions">
-                                    <a href="wishlist.html" class="action wishlist" title="Wishlist"><i
-                                            class="pe-7s-like"></i></a>
-                                    <a href="#" class="action quickview" data-link-action="quickview" title="Quick view"
-                                        data-bs-toggle="modal" data-bs-target="#exampleModal"><i
-                                            class="pe-7s-search"></i></a>
-                                    <a href="compare.html" class="action compare" title="Compare"><i
-                                            class="pe-7s-refresh-2"></i></a>
-                                </div>
-                                <button title="Add To Cart" class=" add-to-cart">Add
-                                    To Cart</button>
-                            </div>
-                            <div class="content">
-                                <span class="ratings">
-                                    <span class="rating-wrap">
-                                        <span class="star" style="width: 90%"></span>
-                                    </span>
-                                    <span class="rating-num">( 4.5 Review )</span>
-                                </span>
-                                <h5 class="title"><a href="single-product.html">Women's Long
-                                        Sleeve
-                                        Shirts</a></h5>
-                                <span class="price">
-                                    <span class="new">$30.50</span>
-                                    <span class="old">$38.00</span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="new-product-item swiper-slide">
-                        <!-- Single Prodect -->
-                        <div class="product">
-                            <div class="thumb">
-                                <a href="single-product.html" class="image">
-                                    <img src="{{ asset('fontend') }}/images/product-image/11.jpg" alt="Product" />
-                                    <img class="hover-image" src="{{ asset('fontend') }}/images/product-image/11.jpg" alt="Product" />
-                                </a>
-                                <span class="badges">
-                                    <span class="new">Sale</span>
-                                </span>
-                                <div class="actions">
-                                    <a href="wishlist.html" class="action wishlist" title="Wishlist"><i
-                                            class="pe-7s-like"></i></a>
-                                    <a href="#" class="action quickview" data-link-action="quickview" title="Quick view"
-                                        data-bs-toggle="modal" data-bs-target="#exampleModal"><i
-                                            class="pe-7s-search"></i></a>
-                                    <a href="compare.html" class="action compare" title="Compare"><i
-                                            class="pe-7s-refresh-2"></i></a>
-                                </div>
-                                <button title="Add To Cart" class=" add-to-cart">Add
-                                    To Cart</button>
-                            </div>
-                            <div class="content">
-                                <span class="ratings">
-                                    <span class="rating-wrap">
-                                        <span class="star" style="width: 70%"></span>
-                                    </span>
-                                    <span class="rating-num">( 3.5 Review )</span>
-                                </span>
-                                <h5 class="title"><a href="single-product.html">Parrera
-                                        Sunglasses -
-                                        Lomashop</a></h5>
-                                <span class="price">
-                                    <span class="new">$38.50</span>
-                                </span>
-                            </div>
-                        </div>
-                        <!-- Single Prodect -->
-                    </div>
-                    <div class="new-product-item swiper-slide">
-                        <!-- Single Prodect -->
-                        <div class="product">
-                            <div class="thumb">
-                                <a href="single-product.html" class="image">
-                                    <img src="{{ asset('fontend') }}/images/product-image/3.jpg" alt="Product" />
-                                    <img class="hover-image" src="{{ asset('fontend') }}/images/product-image/4.jpg" alt="Product" />
-                                </a>
-                                <span class="badges">
-                                    <span class="sale">-10%</span>
-                                    <span class="new">New</span>
-                                </span>
-                                <div class="actions">
-                                    <a href="wishlist.html" class="action wishlist" title="Wishlist"><i
-                                            class="pe-7s-like"></i></a>
-                                    <a href="#" class="action quickview" data-link-action="quickview" title="Quick view"
-                                        data-bs-toggle="modal" data-bs-target="#exampleModal"><i
-                                            class="pe-7s-search"></i></a>
-                                    <a href="compare.html" class="action compare" title="Compare"><i
-                                            class="pe-7s-refresh-2"></i></a>
-                                </div>
-                                <button title="Add To Cart" class=" add-to-cart">Add
-                                    To Cart</button>
-                            </div>
-                            <div class="content">
-                                <span class="ratings">
-                                    <span class="rating-wrap">
-                                        <span class="star" style="width: 80%"></span>
-                                    </span>
-                                    <span class="rating-num">( 4 Review )</span>
-                                </span>
-                                <h5 class="title"><a href="single-product.html">Ardene Microfiber
-                                        Tights</a>
-                                </h5>
-                                <span class="price">
-                                    <span class="new">$38.50</span>
-                                    <span class="old">$48.50</span>
-                                </span>
-                            </div>
-                        </div>
-                        <!-- Single Prodect -->
-                    </div>
-                    <div class="new-product-item swiper-slide">
-                        <!-- Single Prodect -->
-                        <div class="product">
-                            <div class="thumb">
-                                <a href="single-product.html" class="image">
-                                    <img src="{{ asset('fontend') }}/images/product-image/1.jpg" alt="Product" />
-                                    <img class="hover-image" src="{{ asset('fontend') }}/images/product-image/2.jpg" alt="Product" />
-                                </a>
-                                <span class="badges">
-                                    <span class="new">New</span>
-                                </span>
-                                <div class="actions">
-                                    <a href="wishlist.html" class="action wishlist" title="Wishlist"><i
-                                            class="pe-7s-like"></i></a>
-                                    <a href="#" class="action quickview" data-link-action="quickview" title="Quick view"
-                                        data-bs-toggle="modal" data-bs-target="#exampleModal"><i
-                                            class="pe-7s-search"></i></a>
-                                    <a href="compare.html" class="action compare" title="Compare"><i
-                                            class="pe-7s-refresh-2"></i></a>
-                                </div>
-                                <button title="Add To Cart" class=" add-to-cart">Add
-                                    To Cart</button>
-                            </div>
-                            <div class="content">
-                                <span class="ratings">
-                                    <span class="rating-wrap">
-                                        <span class="star" style="width: 100%"></span>
-                                    </span>
-                                    <span class="rating-num">( 5 Review )</span>
-                                </span>
-                                <h5 class="title"><a href="single-product.html">Women's Elizabeth
-                                        Coat
-                                    </a>
-                                </h5>
-                                <span class="price">
-                                    <span class="new">$38.50</span>
-                                </span>
-                            </div>
-                        </div>
-                        <!-- Single Prodect -->
-                    </div>
-                </div>
-                <!-- Add Arrows -->
-                <div class="swiper-buttons">
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
+@endsection
+@section('javascript')
+    <script>
+        $(document).ready(function() {
+            $(".color_palate").click(function() {
+                var product_id = {{ $product_id }};
+                var color_id = $(this).attr('id');
+                $('#input_color').val(color_id);
+                $('#input_size').val("");
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('get_sizes') }}",
+                    data: {
+                        product_id: product_id,
+                        color_id: color_id
+                    },
+                    success: function(data) {
+                        $('#product_sizes').html(data)
+
+                    }
+
+                });
+            });
+            $('#product_sizes').change(function() {
+                var size_id = $('#product_sizes').val();
+                $('#input_size').val(size_id);
+                var color_id = $('#input_color').val();
+                var product_id = {{ $product_id }};
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('get_available_qty') }}",
+                    data: {
+                        product_id: product_id,
+                        color_id: color_id,
+                        size_id: size_id,
+                    },
+                    success: function(data) {
+                        $("#default_stock").hide();
+                        var target = $("#available_stock");
+                        if (data > 0) {
+                            target.addClass('badge bg-success text-white');
+                            target.html("In stock");
+                        } else {
+                            target.addClass('badge bg-danger text-white');
+                            target.html("Out of stock");
+                        }
+                    }
+
+                });
+            });
+        });
+    </script>
 @endsection

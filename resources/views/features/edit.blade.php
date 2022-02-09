@@ -14,11 +14,6 @@
                     <h2>Edit Banner</h2>
                 </div>
                 <div class="card-body">
-                    @if (session('success'))
-                        <div class="alert alert-success">
-                            <h6>{{ session('success') }}</h6>
-                        </div>
-                    @endif
                     <form action="{{ route('banner.update', $banner->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PATCH')

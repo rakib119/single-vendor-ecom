@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\FeaturePhoto;
 use App\Models\Product;
+use App\Models\Subcategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
+
+
 
 class ProductController extends Controller
 {
@@ -18,8 +24,18 @@ class ProductController extends Controller
      */
     public function index()
     {
+        // return DB::table('products')
+        //     ->join('categories', 'products.category_id', '=', 'categories.id')
+        //     ->join('feature_photos', 'products.id', '=', 'feature_photos.product_id')
+        //     ->select('products.*', 'categories.category_name', 'feature_photos.product_id')
+        //     ->get();
         return view('product.index', [
-            'products' => Product::all(),
+
+            'products' => DB::table('products')
+                ->join('categories', 'products.category_id', '=', 'categories.id')
+                ->select('products.*', 'categories.category_name')
+                ->where('products.deleted_at', NULL)
+                ->get(),
             'deleted_products' => Product::onlyTrashed()->get()
         ]);
     }
@@ -46,13 +62,15 @@ class ProductController extends Controller
     {
         $request->validate([
             'product_name' => 'required',
-            'product_photo' => 'required|mimes:jpg,JPG,jpeg,JPEG|dimensions:height=310,width=270',
+            'product_photo' => 'required|mimes:jpg,jpeg|dimensions:height=310,width=270',
             'regular_price' => 'required|integer',
-            'discounted_price' => 'nullable|integer',
+            'discounted_price' => 'nullable|integer|lte:regular_price',
             'category_id' => 'required|integer',
             'subcategory_id' => 'required|integer',
             'short_description' => 'required',
             'description' => 'required',
+        ], [
+            'product_photo.dimensions' => 'The product photo dimensions should be 310 * 270'
         ]);
 
         $product_photo = Str::random(8) . auth()->id() . "." . $request->file('product_photo')->getClientOriginalExtension();
@@ -90,7 +108,8 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view('product.show', compact('product'));
+        $feature_photos = FeaturePhoto::where('product_id', $product->id)->get();
+        return view('product.show', compact('product', 'feature_photos'));
     }
 
     /**
@@ -101,9 +120,12 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        $categories = Category::all();
+        $sub_categories = Subcategory::where('category_id', $product->category_id)->get();
         return view('product.edit', [
             'product' => $product,
-            'categories' => Category::all()
+            'categories' => $categories,
+            'subcategories' => $sub_categories
 
         ]);
     }
@@ -119,9 +141,9 @@ class ProductController extends Controller
     {
         $request->validate([
             'product_name' => 'required',
-            'product_photo' => 'nullablle|mimes:jpg,JPG,jpeg,JPEG|dimensions:height=310,width=270',
+            'product_photo' => 'nullable|mimes:jpg,jpeg|dimensions:height=310,width=270',
             'regular_price' => 'required|integer',
-            'discounted_price' => 'nullable|integer',
+            'discounted_price' => 'nullable|integer|lte:regular_price',
             'category_id' => 'required|integer',
             'subcategory_id' => 'required|integer',
             'short_description' => 'required',
@@ -168,7 +190,10 @@ class ProductController extends Controller
     public function delete($id)
     {
         $product =  Product::onlyTrashed()->where('id', $id)->first();
-        unlink(base_path("public/uploads/products/$product->product_photo"));
+        $photo_location = base_path("public/uploads/products/$product->product_photo");
+        if (file_exists($photo_location)) {
+            unlink($photo_location);
+        }
         $product->forceDelete();
         return redirect('product')->with("success", "Product  deleted successfully");
     }
@@ -181,6 +206,15 @@ class ProductController extends Controller
     }
     public function getSubCat(Request $request)
     {
-        echo "hello";
+        $sub_categories = Subcategory::where('category_id', $request->category_id)->get();
+        if ($sub_categories->count() == 0) {
+            $string_to_send = "<option value=''>--No Data Yet--</option>";
+        } else {
+            $string_to_send = "<option value=''>--Choose One--</option>";
+        }
+        foreach ($sub_categories as $sub_category) {
+            $string_to_send .= " <option $sub_category->id == old('subcategory_id') ? 'selected' : ''  value='$sub_category->id'> $sub_category->subcategory_name </option>";
+        }
+        echo $string_to_send;
     }
 }

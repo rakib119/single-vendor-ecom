@@ -1,4 +1,33 @@
 @extends('dashboard.dashboard')
+{{-- javascript --}}
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('#categoryId').change(() => {
+                var category_id = $('#categoryId').val();
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: "post",
+                    url: '{{ route('product.get_subcat') }}',
+                    data: {
+                        category_id: category_id
+                    },
+                    success: function(results) {
+                        // alert(results);
+                        $('#subcategories').html(results);
+                    }
+                });
+            });
+            $('#summernote').summernote();
+            $('#summernote2').summernote();
+        });
+    </script>
+@endsection
+
 @section('content')
     <div class="content-body">
         <div class="container-fluid">
@@ -14,11 +43,6 @@
                     <h2>Add Product</h2>
                 </div>
                 <div class="card-body">
-                    @if (session('success'))
-                        <div class="alert alert-success">
-                            <h6>{{ session('success') }}</h6>
-                        </div>
-                    @endif
                     <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
@@ -41,12 +65,11 @@
                             </div>
                             <div class="form-group col-6">
                                 <label>Category<span class="text-danger">*</span></label>
-                                <select name="category_id" id="categoryId"
+                                <select autocomplete="OFF" name="category_id" id="categoryId"
                                     class="form-control border border-dark  @error('category_id')is-invalid @enderror">
                                     <option value="">--Select Category--</option>
                                     @foreach ($categories as $category)
-                                        <option {{ $category->id == old('category_id') ? 'selected' : '' }}
-                                            value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                        <option value="{{ $category->id }}">{{ $category->category_name }}</option>
                                     @endforeach
                                 </select>
                                 @error('category_id')
@@ -55,13 +78,9 @@
                             </div>
                             <div class="form-group col-6">
                                 <label>Subcategory<span class="text-danger">*</span></label>
-                                <select name="subcategory_id"
+                                <select autocomplete="OFF" id="subcategories" name="subcategory_id"
                                     class="form-control border border-dark  @error('subcategory_id')is-invalid @enderror">
-                                    <option value="">--Select Subategory--</option>
-                                    @foreach ($categories as $category)
-                                        <option {{ $category->id == old('subcategory_id') ? 'selected' : '' }}
-                                            value="{{ $category->id }}">{{ $category->category_name }}</option>
-                                    @endforeach
+                                    <option value="">--No Data Yet--</option>
                                 </select>
                                 @error('subcategory_id')
                                     <small class="text-danger">{{ $message }}</small>
@@ -115,18 +134,18 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-12">
                                 <label>Short Description <span class="text-danger">*</span></label>
-                                <textarea name="short_description"
+                                <textarea id="summernote" name="short_description"
                                     class="form-control border border-dark  @error('short_description')is-invalid @enderror"
                                     rows="4">{{ old('short_description') }}</textarea>
                                 @error('short_description')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-12">
                                 <label>Long Description <span class="text-danger">*</span></label>
-                                <textarea name="description"
+                                <textarea id="summernote2" name="description"
                                     class="form-control border border-dark  @error('description')is-invalid @enderror"
                                     rows="4">{{ old('description') }}</textarea>
                                 @error('description')
@@ -142,43 +161,4 @@
             </div>
         </div>
     </div>
-@endsection
-@section('script')
-    <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $(document).ready(function() {
-            $('#categoryId').change(() => {
-                var category_id = $('#categoryId').val();
-                // console.log(category_id);
-                $.ajax({
-                    url: 'product/get_subcat',
-                    type: "post",
-                    data: {
-                        "category_id": category_id
-                    }
-                    success: function(results) {
-
-                    }
-                })
-            });
-        });
-
-        // $('#categoryId').change(function() {
-        //         var category_id = $('#categoryId').val();
-        //         console.log(category_id);
-        //         $.ajax({
-        //             type: 'post',
-        //             url: 'product/get_subcat',
-        //             date: category_id: "category_id",
-        //             success: (result) => {
-        //                 alert(result)
-        //             }
-        //         });
-
-        //     });
-    </script>
 @endsection
